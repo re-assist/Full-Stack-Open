@@ -1,43 +1,11 @@
 import { useEffect, useState } from "react"
 import phonebookServices from './services/persons'
+import Person from './components/Person'
+import PersonalForm from './components/PersonalForm'
+import Filter from './components/Filter'
+import Notification from './components/Notification'
+import './index.css'
 
-
-const Filter = ({search, handleSearch}) => (
-  <div>
-    filter shown with: <input value={search} onChange={handleSearch} />
-  </div>
-)
-
-const InputField = ({ field, value, onChange }) => (
-  <div>
-    {field}: <input value={value} onChange={onChange} />
-  </div>
-)
-
-const PersonalForm = ({ newName, handleNewName, newNumber, handleNewNumber, addPerson }) => (
-  <form >
-    <InputField field="Name" value={newName} onChange={handleNewName}/>
-    <InputField field="Number" value={newNumber} onChange={handleNewNumber}/>
-    <div>
-      <button type="submit" onClick={addPerson}>Add</button>
-    </div>
-  </form>
-)
-
-const Person = ({person, handleDelete}) => (
-  <div >
-    <span>{person.name} {person.number}</span>{" "}
-    <button onClick={() => handleDelete(person)}>Delete</button>
-  </div>
-)
-
-const Persons = ({ persons, handleDelete }) => (
-  <div>
-    {persons.map((person) => (
-        <Person key={person.id} person={person} handleDelete={handleDelete}/>
-    ))}
-  </div>
-)
 
 
 const App = () => {
@@ -46,6 +14,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     console.log('effect')
@@ -72,9 +41,22 @@ const App = () => {
 
   const handleDelete = (person) => { 
     if(window.confirm(`Delete ${person.name}`)) { 
-    phonebookServices.remove(person.id).then(() => setPersons(p => p.filter(p => p.id !== person.id) ))
+      phonebookServices
+        .remove(person.id)
+        .then(() => {
+        setPersons(p => p.filter(p => p.id !== person.id))
+        showNotification(`Deleted ${person.name}`, 'delete')
+        })
+      .catch(() => showNotification(`Information about ${person.name} has already been deleted`, 'error'))
     }
   }
+
+  const showNotification = (message, type) => { 
+    setNotification({message, type})
+      setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+   }
   
 
 const addPerson = (event) => {
@@ -100,6 +82,7 @@ const addPerson = (event) => {
           )
           setNewName('')
           setNewNumber('')
+          showNotification(`Updated Number of ${returnedPersonObject.name}`, 'success')
         })
 
       }
@@ -122,9 +105,10 @@ const addPerson = (event) => {
   phonebookServices
     .create(personObj)
     .then( returnedPersonObject => {
-    setPersons(persons.concat(returnedPersonObject))
-    setNewName('')
-    setNewNumber('')
+      setPersons(persons.concat(returnedPersonObject))
+      setNewName('')
+      setNewNumber('')
+      showNotification(`Added ${returnedPersonObject.name}`, 'success')
   })
 }
   const personsToShow = search.trim() === '' ? persons :
@@ -133,7 +117,7 @@ const addPerson = (event) => {
   return (
     <>
       <h2>PhoneBook</h2>
-      
+      <Notification notification={notification} />
       <Filter search={search} handleSearch={handleSearch} />
       
         <h2>add a new</h2>
@@ -146,7 +130,11 @@ const addPerson = (event) => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} handleDelete={handleDelete} />
+      <div>
+    {personsToShow.map((person) => (
+        <Person key={person.id} person={person} handleDelete={handleDelete}/>
+    ))}
+  </div>
     </>
   )
 }

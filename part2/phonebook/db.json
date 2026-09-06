@@ -17,7 +17,7 @@
     },
     {
       "name": "Thor",
-      "number": "040-123-1212",
+      "number": "134-1234-123",
       "id": "cEshShIym9k"
     },
     {
@@ -29,11 +29,6 @@
       "name": "Helios ",
       "number": "059-123-2323",
       "id": "zq93LbXwuqA"
-    },
-    {
-      "name": "Hercules",
-      "number": "080-123-1234",
-      "id": "TQFI5NczwgQ"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

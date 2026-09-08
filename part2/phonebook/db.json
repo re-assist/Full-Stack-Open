@@ -1,0 +1,35 @@
+{
+  "persons": [
+    {
+      "name": "Dan Abramov",
+      "number": "12-43-234345",
+      "id": "3"
+    },
+    {
+      "name": "Mary Poppendieck",
+      "number": "39-23-6423122",
+      "id": "4"
+    },
+    {
+      "name": "Henry Schrodinger",
+      "number": "090-12345-78",
+      "id": "KS2_8UZeCME"
+    },
+    {
+      "name": "Thor",
+      "number": "134-1234-123",
+      "id": "cEshShIym9k"
+    },
+    {
+      "name": "Odin",
+      "number": "040-123-1211",
+      "id": "hzlPIBe3nNg"
+    },
+    {
+      "name": "Helios ",
+      "number": "059-123-2323",
+      "id": "zq93LbXwuqA"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
